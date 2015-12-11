@@ -11,23 +11,29 @@ source $base_dir/lib/prelude_apply.bash
 mkdir -p $chroot/tmp
 if [ -f $chroot/etc/debian_version ] # Ubuntu
 then
-  cp $assets_dir/google-compute-daemon_1.2.5-1_all.deb $chroot/tmp
-  cp $assets_dir/google-startup-scripts_1.2.5-1_all.deb $chroot/tmp
+  cp $assets_dir/google-compute-daemon_1.3.3-1_all.deb $chroot/tmp
+  cp $assets_dir/google-startup-scripts_1.3.3-1_all.deb $chroot/tmp
 
-  run_in_chroot $chroot "dpkg -i /tmp/google-compute-daemon_1.2.5-1_all.deb /tmp/google-startup-scripts_1.2.5-1_all.deb  || true"
+  run_in_chroot $chroot "dpkg -i /tmp/google-compute-daemon_1.3.3-1_all.deb /tmp/google-startup-scripts_1.3.3-1_all.deb || true"
   pkg_mgr install
 
-  rm -f /tmp/google-compute-daemon_1.2.5-1_all.deb
-  rm -f /tmp/google-startup-scripts_1.2.5-1_all.deb
+  # Avoid collissions recreating the host keys
+  run_in_chroot $chroot "rm -fr /usr/share/google/regenerate-host-keys"
+
+  rm -f /tmp/google-compute-daemon_1.3.3-1_all.deb
+  rm -f /tmp/google-startup-scripts_1.3.3-1_all.deb
 elif [ -f $chroot/etc/redhat-release ] # Centos or RHEL
 then
-  cp $assets_dir/google-compute-daemon-1.2.5-1.noarch.rpm $chroot/tmp
-  cp $assets_dir/google-startup-scripts-1.2.5-1.noarch.rpm $chroot/tmp
+  cp $assets_dir/google-compute-daemon-1.3.3-1.noarch.rpm $chroot/tmp
+  cp $assets_dir/google-startup-scripts-1.3.3-1.noarch.rpm $chroot/tmp
 
-  run_in_chroot $chroot "yum -y install /tmp/google-compute-daemon-1.2.5-1.noarch.rpm /tmp/google-startup-scripts-1.2.5-1.noarch.rpm"
+  run_in_chroot $chroot "yum -y install /tmp/google-compute-daemon-1.3.3-1.noarch.rpm /tmp/google-startup-scripts-1.3.3-1.noarch.rpm"
 
-  rm -f /tmp/google-compute-daemon-1.2.5-1.noarch.rpm
-  rm -f /tmp/google-startup-scripts-1.2.5-1.noarch.rpm
+  # Avoid collissions recreating the host keys
+  run_in_chroot $chroot "rm -fr /usr/share/google/regenerate-host-keys"
+
+  rm -f /tmp/google-compute-daemon-1.3.3-1.noarch.rpm
+  rm -f /tmp/google-startup-scripts-1.3.3-1.noarch.rpm
 else
   echo "Unknown OS, exiting"
   exit 2
