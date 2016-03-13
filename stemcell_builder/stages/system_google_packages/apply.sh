@@ -29,6 +29,11 @@ then
 
   run_in_chroot $chroot "yum -y install /tmp/google-compute-daemon-1.3.3-1.noarch.rpm /tmp/google-startup-scripts-1.3.3-1.noarch.rpm"
 
+  # Hack: enable systemd google services (rpm control script does not detect systemd)
+  run_in_chroot $chroot "/bin/systemctl enable /usr/lib/systemd/system/google-accounts-manager.service"
+  run_in_chroot $chroot "/bin/systemctl enable /usr/lib/systemd/system/google-address-manager.service"
+  run_in_chroot $chroot "/bin/systemctl enable /usr/lib/systemd/system/google-clock-sync-manager.service"
+
   # Avoid collissions recreating the host keys
   run_in_chroot $chroot "rm -fr /usr/share/google/regenerate-host-keys"
 
