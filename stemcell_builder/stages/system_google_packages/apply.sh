@@ -17,6 +17,11 @@ then
   cp $assets_dir/etc/init/google-accounts-manager-{task,service}.conf $chroot/etc/init/
   cp $assets_dir/google-address-manager.conf $chroot/etc/init/
   cp $assets_dir/google-clock-sync-manager.conf $chroot/etc/init/
+
+  # Configure the Google guest environment
+  # https://github.com/GoogleCloudPlatform/compute-image-packages#configuration
+  cp $assets_dir/instance_configs.cfg.template $chroot/etc/default/
+
   chmod -x $chroot/etc/init/google*
 elif [ "${os_type}" == "rhel" -o "${os_type}" == "centos" ]
 then
